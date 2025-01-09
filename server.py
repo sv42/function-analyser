@@ -1,3 +1,4 @@
+import os, sys
 from flask import Flask, render_template, request
 import numpy as np
 import plotly.graph_objs as go
@@ -159,4 +160,7 @@ def index():
     return render_template('index.html', function=func_str)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    if '--prod' in sys.argv:
+        app.run(host='0.0.0.0', debug=False)
+    else:
+        app.run(debug=True)
