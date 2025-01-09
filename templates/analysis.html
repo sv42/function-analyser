@@ -1,0 +1,73 @@
+<div class="bg-white p-4 rounded-lg shadow-md h-full">
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Аналіз функції</h2>
+
+    {% if analysis.error %}
+    <div class="p-4 bg-red-50 text-red-700 rounded-lg">
+        {{ analysis.error }}
+    </div>
+    {% else %}
+    <ul class="space-y-4">
+        <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-gray-700">Перетин з віссю Ox</span>
+                <span class="text-sm text-gray-500">(y = 0)</span>
+            </div>
+            <span class="text-gray-600">
+                {% if analysis.roots is string %}
+                {{ analysis.roots }}
+                {% else %}
+                {{ analysis.roots|join(', ') }}
+                {% endif %}
+            </span>
+        </li>
+        <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-gray-700">Точка перетину з віссю Oy</span>
+                <span class="text-sm text-gray-500">(x = 0)</span>
+            </div>
+            <span class="text-gray-600">{{ analysis.y_intercept }}</span>
+        </li>
+        <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-gray-700">Вершини функції</span>
+                <span class="text-sm text-gray-500">(локальні макс./мін.)</span>
+            </div>
+            <span class="text-gray-600">
+                {% if analysis.critical_points is string %}
+                {{ analysis.critical_points }}
+                {% else %}
+                {{ analysis.critical_points|join(', ') }}
+                {% endif %}
+            </span>
+        </li>
+        <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-gray-700">Функція зростає</span>
+                <span class="text-sm text-gray-500">(графік йде вгору ↗)</span>
+            </div>
+            <span class="text-gray-600">{{ analysis.growth_intervals }}</span>
+        </li>
+        <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-gray-700">Функція спадає</span>
+                <span class="text-sm text-gray-500">(графік йде вниз ↘)</span>
+            </div>
+            <span class="text-gray-600">{{ analysis.decay_intervals }}</span>
+        </li>
+        <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-gray-700">Область визначення</span>
+                <span class="text-sm text-gray-500">(X)</span>
+            </div>
+            <span class="text-gray-600">{{ analysis.domain }}</span>
+        </li>
+        <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
+            <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-gray-700">Область значення</span>
+                <span class="text-sm text-gray-500">(Y)</span>
+            </div>
+            <span class="text-gray-600">{{ analysis.range }}</span>
+        </li>
+    </ul>
+    {% endif %}
+</div>
