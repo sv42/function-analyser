@@ -9,7 +9,7 @@
     <ul class="space-y-4">
         <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
-                <span class="font-medium text-gray-700">Перетин з віссю Ox</span>
+                <span class="font-medium text-gray-700">Нулі функції</span>
                 <span class="text-sm text-gray-500">(y = 0)</span>
             </div>
             <span class="text-gray-600">
@@ -30,7 +30,7 @@
         <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Точки екстремуму</span>
-                <span class="text-sm text-gray-500">(макс./мін.)</span>
+                <span class="text-sm text-gray-500">(max./min.)</span>
             </div>
             <span class="text-gray-600">
                 {% if analysis.critical_points is string %}
@@ -43,14 +43,14 @@
         <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Функція зростає</span>
-                <span class="text-sm text-gray-500">(графік йде вгору ↗)</span>
+                <span class="text-sm text-gray-500">(графік йде вгору ↑)</span>
             </div>
             <span class="text-gray-600">{{ analysis.growth_intervals }}</span>
         </li>
         <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Функція спадає</span>
-                <span class="text-sm text-gray-500">(графік йде вниз ↘)</span>
+                <span class="text-sm text-gray-500">(графік йде вниз ↓)</span>
             </div>
             <span class="text-gray-600">{{ analysis.decay_intervals }}</span>
         </li>
