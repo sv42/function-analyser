@@ -16,6 +16,10 @@ NUM_POINTS = 5000
 # Function to analyze properties of a mathematical function
 # Function to analyze properties of a mathematical function
 def analyze_function(func_str):
+    func_str = func_str.replace("**", "^")
+        
+    x = symbols('x')
+    func = sympify(func_str)
     try:
         x = symbols('x')
         func = sympify(func_str)
@@ -81,8 +85,8 @@ def analyze_function(func_str):
         return {
             "roots": roots if roots else "немає",
             "critical_points": critical_points if critical_points else "немає",
-            "growth_intervals": " u ".join(growth_intervals) if growth_intervals else "немає",
-            "decay_intervals": " u ".join(decay_intervals) if decay_intervals else "немає",
+            "growth_intervals": " ∪ ".join(growth_intervals) if growth_intervals else "немає",
+            "decay_intervals": " ∪ ".join(decay_intervals) if decay_intervals else "немає",
             "y_intercept": round(float(y_intercept), 2),  # Return y-intercept
             "domain": domain,
             "range": range_vals
@@ -96,6 +100,10 @@ def analyze_function(func_str):
 
 # Function to plot the graph of a mathematical function
 def plot_function(func_str):
+    func_str = func_str.replace("**", "^")
+        
+    x_sym = symbols('x')
+    expr = sympify(func_str)
     try:
         x_sym = symbols('x')
         expr = sympify(func_str)
