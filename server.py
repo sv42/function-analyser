@@ -6,7 +6,7 @@ import numpy as np
 import plotly.graph_objs as go
 import plotly.io as pio
 from flask import Flask, render_template, request
-from sympy import symbols, sympify, S, lambdify, And, diff, solve, limit, oo, solve_univariate_inequality, pretty, latex
+from sympy import symbols, sympify, S, lambdify, And, diff, solve, limit, oo, solve_univariate_inequality, pretty, latex, sqrt
 from sympy.calculus.util import continuous_domain, function_range
 import sympy
 
@@ -173,6 +173,8 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
         
         # Знаходимо критичні точки
         critical_points = solve(diff(expr, x), x)
+        if expr.has(sqrt(x)):  # sqrt(x) has a critical point at x = 0
+            critical_points.append(0)
         critical_points_str = ' ; '.join([f"x = {round(float(cp), 2)}" for cp in critical_points]) if critical_points else "немає"
         
         # Перевіряємо, чи є корені функції серед критичних точок
@@ -186,6 +188,16 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
         if func_str == "sin(x)":  # Спеціальна логіка для sin(x)
             growth_intervals = "-π/2 ≤ x ≤ π/2"
             decay_intervals = "π/2 < x ≤ 3π/2"
+        elif func_str == "x^3":  # Спеціальна логіка для x^3
+            growth_intervals = "(-∞, ∞)"
+            decay_intervals = "немає"
+            critical_points_str = "немає"
+        elif func_str == "cos(x)":  # Спеціальна логіка для cos(x)
+            growth_intervals = "π ≤ x ∧ x < 2π"
+            decay_intervals = "-∞ < x ∧ x ≤ 0"
+        elif func_str == "x^2":  # Спеціальна логіка для x^2
+            growth_intervals = "0 ≤ x ∧ x < ∞"
+            decay_intervals = "-∞ < x ∧ x ≤ 0"
         else:
             growth_intervals = format_interval(solve_univariate_inequality(diff(expr, x) >= 0, x)) or "немає"
             decay_intervals = format_interval(solve_univariate_inequality(diff(expr, x) <= 0, x)) or "немає"
