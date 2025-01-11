@@ -108,30 +108,38 @@ def analyze_function(func_str):
             decay_intervals.append(final_interval)
 
         # Перетин з віссю OY (x = 0)
-        y_intercept = f(0) if domain.subs(x, 0) else "невизначено"
+        y_intercept = f(0) if domain.subs(x, 0) else "немає"
+        y_intercept = f"y = {y_intercept}"  
+
 
         # Діапазон функції (мінімум та максимум)
-        min_val = round(np.nanmin(y_points), 2) if len(y_points) > 0 else "невизначено"
-        max_val = round(np.nanmax(y_points), 2) if len(y_points) > 0 else "невизначено"
+        min_val = round(np.nanmin(y_points), 2) if len(y_points) > 0 else "немає"
+        max_val = round(np.nanmax(y_points), 2) if len(y_points) > 0 else "немає"
 
-        # Область значення
-        range_str = f"({min_val}, {max_val})"
+        range_str = f"[{min_val}, {max_val}]"
+
 
         # Критичні точки у вигляді рядка
-        critical_points = f"{', '.join(map(str, critical_xmin))}" if critical_xmin else "(немає)"
+        critical_points_combined = ", ".join(
+    map(lambda x: str(int(x)) if x.is_integer() else str(x), critical_xmin + critical_xmax)
+) if critical_xmin or critical_xmax else "немає"
+
 
         # Корені у вигляді рядка
-        roots_str = f"x = {', '.join(map(str, roots))}" if roots else "(немає)"
+        roots_str = f"x = {', '.join(map(str, roots))}" if roots else "немає"
 
         return {
             "roots": roots_str,
-            "critical_points": critical_points,
-            "growth_intervals": " ∪ ".join(growth_intervals) if growth_intervals else "(немає)",
-            "decay_intervals": " ∪ ".join(decay_intervals) if decay_intervals else "(немає)",
-            "y_intercept": f"({y_intercept})",  # Перетин з OY
-            "domain": domain_str,  # Домен функції
-            "range": range_str  # Мінімальні та максимальні значення
-        }
+            "critical_points": critical_points_combined,
+            "growth_intervals": " ∪ ".join(growth_intervals) if growth_intervals else "немає",
+            "decay_intervals": " ∪ ".join(decay_intervals) if decay_intervals else "немає",
+            "y_intercept": y_intercept,
+            "domain": domain_str,
+            "range": range_str,
+            "min_points": critical_xmin,  # Додайте точки мінімуму
+            "max_points": critical_xmax  # Додайте точки максимуму
+}
+
 
     except Exception as e:
         return {"error": f"Помилка при аналізі функції: {str(e)}"}
@@ -173,10 +181,6 @@ def plot_function(func_str):
     except Exception as e:
         return {"error": f"Помилка при побудові графіка: {str(e)}"}
 
-@app.route('/blya')
-def hui():
-    print(request.args)
-    return request.args
 
 @app.route('/')
 def index():

@@ -29,8 +29,8 @@
         </li>
         <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
-                <span class="font-medium text-gray-700">Точки екстремуму</span>
-                <span class="text-sm text-gray-500">(max./min.)</span>
+                <span class="font-medium text-gray-700">Найбільше і найменше значення</span>
+                <span class="text-sm text-gray-500">(max/min)</span>
             </div>
             <span class="text-gray-600">
                 {% if analysis.critical_points is string %}
@@ -63,7 +63,7 @@
         </li>
         <li class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
-                <span class="font-medium text-gray-700">Область значення</span>
+                <span class="font-medium text-gray-700">Область значень</span>
                 <span class="text-sm text-gray-500">(E(f))</span>
             </div>
             <span class="text-gray-600">{{ analysis.range }}</span>
