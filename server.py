@@ -164,19 +164,22 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
         # Знаходимо область визначення та значень
         domain = continuous_domain(expr, x, S.Reals)  # де функція неперервна
         range_interval = function_range(expr, x, domain)  # які значення приймає
-        
         # Збираємо всі результати аналізу
+        
+        roots = solve(expr, x)
+        roots_str = ' = '.join([f"x = {round(float(root), 2)}" for root in roots]) if roots else "немає"
+        critical_points = solve(diff(expr, x), x)
+        critical_points_str = ' = '.join([f"x = {round(float(cp), 2)}" for cp in critical_points]) if critical_points else "немає"
         return {
             "domain": format_interval(domain),
             "range": format_interval(range_interval),
             # Розв'язуємо рівняння f(x) = 0
-            "roots": format_interval(solve(expr, x)) if solve(expr, x) else "немає",
+            "roots": roots_str,
             # Шукаємо точки, де похідна = 0 (вершини, ями)
-            "critical_points": format_interval(solve(diff(expr, x))) or "немає",
+            "critical_points": critical_points_str,
             # Де похідна > 0, там функція зростає
-            "growth_intervals": format_interval(solve_univariate_inequality(diff(expr, x) > 0, x)) or "немає",
-            # Де похідна < 0, там функція спадає
-            "decay_intervals": format_interval(solve_univariate_inequality(diff(expr, x) < 0, x)) or "немає",
+            "growth_intervals": format_interval(solve_univariate_inequality(diff(expr, x) >= 0, x)) or "немає",  
+            "decay_intervals": format_interval(solve_univariate_inequality(diff(expr, x) <= 0, x)),
             # Перевіряємо чи x = 0 входить в область визначення
             "y_intercept": f"y = {float(expr.subs(x, 0))}" if 0 in domain else "немає"
         }
