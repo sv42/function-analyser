@@ -115,6 +115,7 @@ def format_interval(interval) -> str:
     result = result.replace(r'\geq', '≥')
     result = result.replace(r'\vee', ' ∨ ')
     result = result.replace(r'\frac{', '')
+    result = result.replace(r'\sqrt{', '√')
     result = result.replace('}{', '/')
     result = result.replace('}', '')
     result = result.replace('{', '')

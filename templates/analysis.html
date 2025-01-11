@@ -10,27 +10,27 @@
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Область визначення</span>
-                <span class="text-sm text-gray-500">(D(f))</span>
+                <span class="text-sm text-gray-500">D(f)</span>
             </div>
             <span class="text-gray-600">{{ analysis.domain }}</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Область значень</span>
-                <span class="text-sm text-gray-500">(E(f))</span>
+                <span class="text-sm text-gray-500">E(f)</span>
             </div>
             <span class="text-gray-600">{{ analysis.range }}</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Нулі функції</span>
-                <span class="text-sm text-gray-500">(f(x) = 0)</span>
+                <span class="text-sm text-gray-500">(y = 0)</span>
             </div>
             <span class="text-gray-600">{{ analysis.roots }}</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
-                <span class="font-medium text-gray-700">Перетин з віссю Y</span>
+                <span class="font-medium text-gray-700">Перетин з віссю OY</span>
                 <span class="text-sm text-gray-500">(x = 0)</span>
             </div>
             <span class="text-gray-600">{{ analysis.y_intercept }}</span>
@@ -38,21 +38,21 @@
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Критичні точки</span>
-                <span class="text-sm text-gray-500">(екстремуми)</span>
+                <span class="text-sm text-gray-500">(min/max)</span>
             </div>
             <span class="text-gray-600">{{ analysis.critical_points }}</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Проміжки зростання</span>
-                <span class="text-sm text-gray-500">(де функція зростає)</span>
+                <span class="text-sm text-gray-500">де функція зростає</span>
             </div>
             <span class="text-gray-600">{{ analysis.growth_intervals }}</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Проміжки спадання</span>
-                <span class="text-sm text-gray-500">(де функція спадає)</span>
+                <span class="text-sm text-gray-500">де функція спадає</span>
             </div>
             <span class="text-gray-600">{{ analysis.decay_intervals }}</span>
         </div>
