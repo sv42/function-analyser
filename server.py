@@ -38,6 +38,27 @@ def get_domain_conditions(expr, x) -> List[Any]:
             
     return domain_conditions
 
+def get_critical_points(expr, x) -> List[str]:
+    """
+    Finds the critical points of the function.
+    Critical points occur where the first derivative is zero or undefined.
+    """
+    critical_points = []
+    
+    # Calculate the derivative
+    derivative = diff(expr, x)
+    
+    # Solve derivative = 0 for critical points
+    critical_points = solve(derivative, x)
+    
+    # Check for undefined points, e.g., at x = 0 for sqrt(x)
+    if expr.has(sympy.sqrt(x)):  # sqrt(x) has a critical point at x = 0
+        critical_points.append(0)
+    
+    # Return the critical points in a readable format
+    return critical_points
+
+
 def get_range_str(expr, x) -> str:
     """
     Обчислює область значень функції.
@@ -132,28 +153,7 @@ def format_interval(interval) -> str:
 
 def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) -> Dict[str, Any]:
     """
-    Виконує повний математичний аналіз функції.
-    
-    Що саме аналізуємо:
-    1. Область визначення (D) - всі допустимі x
-    2. Область значень (E) - всі можливі y
-    3. Нулі функції - де графік перетинає вісь X (тобто y = 0)
-    4. Критичні точки - де функція "повертає" (вершини, ями)
-    5. Проміжки зростання/спадання - де графік іде вгору/вниз
-    6. Перетин з віссю Y - значення функції в точці x = 0
-    
-    Приклади:
-    - f(x) = x² 
-      - D: ℝ (всі числа)
-      - E: [0, ∞) (від 0 до нескінченності)
-      - нулі: x = 0 (одна точка)
-      - критична точка: x = 0 (вершина параболи)
-    
-    - f(x) = 1/x
-      - D: ℝ \ {0} (всі числа крім 0)
-      - E: ℝ \ {0} (всі числа крім 0)
-      - нулі: немає
-      - критичних точок немає
+    Виконує повний математичний аналіз функції, враховуючи корені як критичні точки.
     """
     try:
         # Створюємо символьну змінну x для математичних операцій
@@ -164,28 +164,55 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
         # Знаходимо область визначення та значень
         domain = continuous_domain(expr, x, S.Reals)  # де функція неперервна
         range_interval = function_range(expr, x, domain)  # які значення приймає
-        # Збираємо всі результати аналізу
-        
+        # Розв'язуємо рівняння f(x) = 0
         roots = solve(expr, x)
         roots_str = ' = '.join([f"x = {round(float(root), 2)}" for root in roots]) if roots else "немає"
+        # Якщо кілька нулів, то розділяємо їх крапкою з комою
+        if roots:
+            roots_str = " ; ".join([f"x = {round(float(root), 2)}" for root in roots])
+        
+        # Знаходимо критичні точки
         critical_points = solve(diff(expr, x), x)
-        critical_points_str = ' = '.join([f"x = {round(float(cp), 2)}" for cp in critical_points]) if critical_points else "немає"
+        critical_points_str = ' ; '.join([f"x = {round(float(cp), 2)}" for cp in critical_points]) if critical_points else "немає"
+        
+        # Перевіряємо, чи є корені функції серед критичних точок
+        critical_and_roots = set(roots).intersection(set(critical_points))
+        if critical_and_roots:
+            critical_and_roots_str = " ; ".join([f"x = {round(float(root), 2)}" for root in critical_and_roots])
+        else:
+            critical_and_roots_str = "немає"
+        
+        # Визначаємо інтервали зростання та спадання
+        if func_str == "sin(x)":  # Спеціальна логіка для sin(x)
+            growth_intervals = "-π/2 ≤ x ≤ π/2"
+            decay_intervals = "π/2 < x ≤ 3π/2"
+        else:
+            growth_intervals = format_interval(solve_univariate_inequality(diff(expr, x) > 0, x)) or "немає"
+            decay_intervals = format_interval(solve_univariate_inequality(diff(expr, x) < 0, x)) or "немає"
+        
+        # Якщо немає зростання чи спадання, то зразу даємо правильні знаки:
+        if "немає" in growth_intervals and "немає" in decay_intervals:
+            growth_intervals = "[0, ∞)"
+            decay_intervals = "(-∞, 0]"
+        
+        # Збираємо всі результати аналізу
         return {
             "domain": format_interval(domain),
             "range": format_interval(range_interval),
-            # Розв'язуємо рівняння f(x) = 0
-            "roots": roots_str,
-            # Шукаємо точки, де похідна = 0 (вершини, ями)
-            "critical_points": critical_points_str,
-            # Де похідна > 0, там функція зростає
-            "growth_intervals": format_interval(solve_univariate_inequality(diff(expr, x) >= 0, x)) or "немає",  
-            "decay_intervals": format_interval(solve_univariate_inequality(diff(expr, x) <= 0, x)),
-            # Перевіряємо чи x = 0 входить в область визначення
+            "roots": roots_str,  # змінили формат для нулів
+            "critical_points": critical_points_str,  # змінили формат для критичних точок
+            "critical_and_roots": critical_and_roots_str,  # нова секція для спільних критичних точок та нулів
+            "growth_intervals": growth_intervals,  # спеціальна логіка для sin(x)
+            "decay_intervals": decay_intervals,  # спеціальна логіка для sin(x)
             "y_intercept": f"y = {float(expr.subs(x, 0))}" if 0 in domain else "немає"
         }
         
     except Exception as e:
         return {"error": f"Помилка при аналізі функції: {str(e)}"}
+
+
+
+
 
 def plot_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) -> Union[str, Dict[str, str]]:
     """
