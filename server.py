@@ -187,8 +187,8 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
             growth_intervals = "-π/2 ≤ x ≤ π/2"
             decay_intervals = "π/2 < x ≤ 3π/2"
         else:
-            growth_intervals = format_interval(solve_univariate_inequality(diff(expr, x) > 0, x)) or "немає"
-            decay_intervals = format_interval(solve_univariate_inequality(diff(expr, x) < 0, x)) or "немає"
+            growth_intervals = format_interval(solve_univariate_inequality(diff(expr, x) >= 0, x)) or "немає"
+            decay_intervals = format_interval(solve_univariate_inequality(diff(expr, x) <= 0, x)) or "немає"
         
         # Якщо немає зростання чи спадання, то зразу даємо правильні знаки:
         if "немає" in growth_intervals and "немає" in decay_intervals:
