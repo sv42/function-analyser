@@ -175,7 +175,7 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
         critical_points = solve(diff(expr, x), x)
         if expr.has(sqrt(x)):  # sqrt(x) has a critical point at x = 0
             critical_points.append(0)
-        critical_points_str = ' ; '.join([f"x = {round(float(cp), 2)}" for cp in critical_points]) if critical_points else "немає"
+        critical_points_str = ' ; '.join([f"x = {round(float(cp), 2)}, y = {round(float(expr.subs(x, cp)), 2)}" for cp in critical_points]) if critical_points else "немає"
         
         # Перевіряємо, чи є корені функції серед критичних точок
         critical_and_roots = set(roots).intersection(set(critical_points))
