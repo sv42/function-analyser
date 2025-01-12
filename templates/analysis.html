@@ -1,5 +1,5 @@
 <div class="bg-white p-4 rounded-lg shadow-md h-full">
-    <h2 class="text-xl font-semibold mb-4 text-gray-800">Аналіз функції</h2>
+    <h2 class="text-xl font-semibold mb-4 text-gray-800">Дослідження функції</h2>
 
     {% if analysis.error %}
     <div class="p-4 bg-red-50 text-red-700 rounded-lg">
@@ -24,7 +24,7 @@
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Нулі функції</span>
-                <span class="text-sm text-gray-500">(f(x) = 0)</span>
+                <span class="text-sm text-gray-500">f(x) = 0</span>
             </div>
             <span class="text-gray-600">
                 <div class="math-wrapper">
@@ -34,7 +34,7 @@
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
-                <span class="font-medium text-gray-700">Перетин з віссю Y</span>
+                <span class="font-medium text-gray-700">Перетин з віссю OY</span>
                 <span class="text-sm text-gray-500">(x = 0)</span>
             </div>
             <span class="text-gray-600">{{ analysis.y_intercept }}</span>
@@ -42,21 +42,21 @@
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Критичні точки</span>
-                <span class="text-sm text-gray-500">(екстремуми)</span>
+                <span class="text-sm text-gray-500">(min/max)</span>
             </div>
             <span class="text-gray-600">{{ analysis.critical_points }}</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Проміжки зростання</span>
-                <span class="text-sm text-gray-500">(де функція зростає)</span>
+                <span class="text-sm text-gray-500">(↑)</span>
             </div>
             <span class="text-gray-600">{{ analysis.growth_intervals }}</span>
         </div>
         <div class="bg-gray-50 p-3 rounded-lg transition-all hover:shadow-sm">
             <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-gray-700">Проміжки спадання</span>
-                <span class="text-sm text-gray-500">(де функція спадає)</span>
+                <span class="text-sm text-gray-500">(↓)</span>
             </div>
             <span class="text-gray-600">{{ analysis.decay_intervals }}</span>
         </div>
