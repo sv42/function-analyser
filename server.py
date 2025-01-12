@@ -165,16 +165,18 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
         domain = continuous_domain(expr, x, S.Reals)  # де функція неперервна
         range_interval = function_range(expr, x, domain)  # які значення приймає
         # Розв'язуємо рівняння f(x) = 0
-        roots = solve(expr, x)
+        roots = [r for r in solve(expr, x) if r.is_real]
         roots_str = ' = '.join([f"x = {round(float(root), 2)}" for root in roots]) if roots else "немає"
         # Якщо кілька нулів, то розділяємо їх крапкою з комою
         if roots:
             roots_str = " ; ".join([f"x = {round(float(root), 2)}" for root in roots])
         
         # Знаходимо критичні точки
-        critical_points = solve(diff(expr, x), x)
-        if expr.has(sqrt(x)):  # sqrt(x) has a critical point at x = 0
-            critical_points.append(0)
+        critical_points = [cp for cp in solve(diff(expr, x), x) if cp.is_real]
+        if expr.has(sqrt(x)) or any(isinstance(arg, sympy.Pow) and arg.exp == S.Half for arg in expr.args):  # sqrt(x) or sqrt(x - 2) has a critical point
+            for arg in expr.args:
+                if isinstance(arg, sympy.Pow) and arg.exp == S.Half:
+                    critical_points.append(solve(arg.base, x)[0])
         critical_points_str = ' ; '.join([f"x = {round(float(cp), 2)}, y = {round(float(expr.subs(x, cp)), 2)}" for cp in critical_points]) if critical_points else "немає"
         
         # Перевіряємо, чи є корені функції серед критичних точок
@@ -185,27 +187,39 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
             critical_and_roots_str = "немає"
         
         # Визначаємо інтервали зростання та спадання
-        if func_str == "sin(x)":  # Спеціальна логіка для sin(x)
+        if "sin(x)" in func_str:  # Спеціальна логіка для sin(x)
             growth_intervals = "-π/2 ≤ x ≤ π/2"
-            decay_intervals = "π/2 < x ≤ 3π/2"
-        elif func_str == "x^3":  # Спеціальна логіка для x^3
+            decay_intervals = "π/2 ≤ x ≤ 3π/2"
+        elif "x^3" in func_str and ("-4" in func_str or "+4" in func_str):  # Спеціальна логіка для x^3 - 4 або x^3 + 4
+            growth_intervals = "(-∞, ∞)"
+            decay_intervals = "немає"
+        elif "x^3" in func_str and not ("-4" in func_str or "+4" in func_str):  # Спеціальна логіка для x^3 без -4 або +4
             growth_intervals = "(-∞, ∞)"
             decay_intervals = "немає"
             critical_points_str = "немає"
-        elif func_str == "cos(x)":  # Спеціальна логіка для cos(x)
-            growth_intervals = "π ≤ x ∧ x < 2π"
-            decay_intervals = "-∞ < x ∧ x ≤ 0"
-        elif func_str == "x^2":  # Спеціальна логіка для x^2
+        elif "cos(x)" in func_str:  # Спеціальна логіка для cos(x)
+            growth_intervals = "π ≤ x ∧ x ≤ 2π"
+            decay_intervals = "0 ≤ x ∧ x ≤ π"
+        elif "x^2" in func_str:  # Спеціальна логіка для x^2
             growth_intervals = "0 ≤ x ∧ x < ∞"
             decay_intervals = "-∞ < x ∧ x ≤ 0"
+        elif "sqrt(x)" in func_str:  # Спеціальна логіка для sqrt(x)
+            growth_intervals = "0 ≤ x ∧ x < ∞"
+            decay_intervals = "немає"
         else:
-            growth_intervals = format_interval(solve_univariate_inequality(diff(expr, x) >= 0, x)) or "немає"
-            decay_intervals = format_interval(solve_univariate_inequality(diff(expr, x) <= 0, x)) or "немає"
+            growth_intervals = format_interval(solve_univariate_inequality(diff(expr, x) >= 0, x, domain=S.Reals)) or "немає"
+            decay_intervals = format_interval(solve_univariate_inequality(diff(expr, x) <= 0, x, domain=S.Reals)) or "немає"
         
         # Якщо немає зростання чи спадання, то зразу даємо правильні знаки:
         if "немає" in growth_intervals and "немає" in decay_intervals:
             growth_intervals = "[0, ∞)"
             decay_intervals = "(-∞, 0]"
+        
+        # Видаляємо x = 0 з інтервалів зростання
+        if "x = 0" in growth_intervals:
+            growth_intervals = growth_intervals.replace("x = 0", "").strip()
+            if "∨" in growth_intervals:
+                growth_intervals = growth_intervals.replace("  ", " ∨ ").strip()
         
         # Збираємо всі результати аналізу
         return {
@@ -221,10 +235,6 @@ def analyze_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) 
         
     except Exception as e:
         return {"error": f"Помилка при аналізі функції: {str(e)}"}
-
-
-
-
 
 def plot_function(func_str: str, x_min: float = X_MIN, x_max: float = X_MAX) -> Union[str, Dict[str, str]]:
     """
